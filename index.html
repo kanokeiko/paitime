@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>授乳時間管理アプリ</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .calendar {
+            list-style: none;
+            padding: 0;
+        }
+
+        .calendar li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">🍼授乳予測APP🍼</h1>
+<h2>🤱授乳時間を予測する</h2>
+        <form id="feedingForm">
+            <div class="form-group">
+                <label for="startTime">授乳のスタート時間:</label>
+                <input type="time" id="startTime" class="form-control" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="intervalHours">授乳間隔（時間）:</label>
+                    <input type="number" id="intervalHours" class="form-control" min="0" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="intervalMinutes">授乳間隔（分）:</label>
+                    <input type="number" id="intervalMinutes" class="form-control" min="0" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">送信</button>
+        </form>
+<ul class="calendar mt-4" id="calendar"></ul>
+<div class="affiliate-link text-center my-4">
+    <a href="https://amzn.to/3JYmaP1" target="_blank">[AD]授乳中におすすめカフェインレスの生茶</a><br>
+<a href="https://amzn.to/3nvMuIZ" target="_blank">[AD]入眠促進nukのおしゃぶり</a>
+</div>
+
+
+<br>
+<h2>🤱目標から逆算する</h2>
+<form id="targetFeedingForm" class="mt-4">
+    <div class="form-group">
+        <label for="targetTime">授乳の目標時間:</label>
+        <input type="time" id="targetTime" class="form-control" required>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="targetIntervalHours">授乳間隔（時間）:</label>
+            <input type="number" id="targetIntervalHours" class="form-control" min="0" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="targetIntervalMinutes">授乳間隔（分）:</label>
+            <input type="number" id="targetIntervalMinutes" class="form-control" min="0" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">送信</button>
+</form>
+
+<!-- ここにアフィリエイトリンクを追加 -->
+<div class="affiliate-link text-center my-4">
+    <a href="https://amzn.to/3JYmaP1" target="_blank">[AD]授乳中におすすめカフェインレスの生茶</a><br>
+<a href="https://amzn.to/3nvMuIZ" target="_blank">[AD]入眠促進nukのおしゃぶり</a>
+
+
+</div>
+
+
+<ul class="calendar mt-4" id="targetCalendar"></ul>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+document.getElementById('feedingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const startTime = document.getElementById('startTime').value;
+    const intervalHours = document.getElementById('intervalHours').value;
+    const intervalMinutes = document.getElementById('intervalMinutes').value;
+    displayFeedingTimes(startTime, intervalHours, intervalMinutes);
+});
+
+function displayFeedingTimes(startTime, intervalHours, intervalMinutes) {
+    const calendar = document.getElementById('calendar');
+    calendar.innerHTML = '';
+
+    const [startTimeHours, startTimeMinutes] = startTime.split(':');
+    const startDate = new Date();
+    startDate.setHours(parseInt(startTimeHours, 10));
+    startDate.setMinutes(parseInt(startTimeMinutes, 10));
+    startDate.setSeconds(0);
+    startDate.setMilliseconds(0);
+
+    for (let i = 0; i < 6; i++) {
+        const feedingTime = new Date(startDate.getTime() + (i * (parseInt(intervalHours, 10) * 60 + parseInt(intervalMinutes, 10)) * 60 * 1000));
+        const listItem = document.createElement('li');
+        listItem.textContent = `${feedingTime.getHours().toString().padStart(2, '0')}:${feedingTime.getMinutes().toString().padStart(2, '0')}`;
+        calendar.appendChild(listItem);
+    }
+}
+
+document.getElementById('targetFeedingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const targetTime = document.getElementById('targetTime').value;
+    const targetIntervalHours = document.getElementById('targetIntervalHours').value;
+    const targetIntervalMinutes = document.getElementById('targetIntervalMinutes').value;
+    displayTargetFeedingTimes(targetTime, targetIntervalHours, targetIntervalMinutes);
+});
+
+function displayTargetFeedingTimes(targetTime, targetIntervalHours, targetIntervalMinutes) {
+    const targetCalendar = document.getElementById('targetCalendar');
+    targetCalendar.innerHTML = '';
+
+    const [targetTimeHours, targetTimeMinutes] = targetTime.split(':');
+    const targetDate = new Date();
+    targetDate.setHours(parseInt(targetTimeHours, 10));
+    targetDate.setMinutes(parseInt(targetTimeMinutes, 10));
+    targetDate.setSeconds(0);
+    targetDate.setMilliseconds(0);
+
+    const now = new Date();
+
+    while (targetDate > now) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${targetDate.getHours().toString().padStart(2, '0')}:${targetDate.getMinutes().toString().padStart(2, '0')}`;
+        targetCalendar.insertBefore(listItem, targetCalendar.firstChild);
+
+        targetDate.setTime(targetDate.getTime() - ((parseInt(targetIntervalHours, 10) * 60 + parseInt(targetIntervalMinutes, 10)) * 60 * 1000));
+    }
+}
+
+
+</script>
+
+
+
+
+</body>
+</html>
